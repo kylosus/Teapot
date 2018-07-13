@@ -157,7 +157,7 @@ function parseKeywords(keywords) {
     });
     for (let keyword in keywords.server) {
         let temp = new KeywordPair(keyword, keywords.server[keyword]);
-        array.push(new KeywordPair(temp);
+        array.push(temp);
     }
     return array;
 }
