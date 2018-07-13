@@ -153,7 +153,7 @@ function parseKeywords(keywords) {
 
     keywords['global'].forEach(keyword => {
         let temp = new KeywordPair(keyword, []);
-        array.push(temp);;
+        array.push(temp);
     });
     for (let keyword in keywords.server) {
         let temp = new KeywordPair(keyword, keywords.server[keyword]);
