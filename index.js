@@ -152,10 +152,12 @@ function parseKeywords(keywords) {
     }
 
     keywords['global'].forEach(keyword => {
-        array.push(new KeywordPair(keyword, []));
+        let temp = new KeywordPair(keyword, []);
+        array.push(temp);;
     });
     for (let keyword in keywords.server) {
-        array.push(new KeywordPair(keyword, keywords.server[keyword]));
+        let temp = new KeywordPair(keyword, keywords.server[keyword]);
+        array.push(new KeywordPair(temp);
     }
     return array;
 }
