@@ -1,0 +1,21 @@
+{
+  "name": "Teapot",
+  "version": "1.0.0",
+  "description": "Discord bot that logs keywords, and notifies you",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "keywords": [
+    "Discord bot",
+    "Keyword logger",
+    "logger"
+  ],
+  "author": "jokersus#3343",
+  "license": "ISC",
+  "dependencies": {
+    "discord.js": "^11.3.2",
+    "request": "^2.87.0",
+    "request-promise": "^4.2.2"
+  }
+}

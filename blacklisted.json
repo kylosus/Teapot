@@ -1,0 +1,16 @@
+{
+    "users": [
+        "example user id 1",
+        "eapmle user id 2"
+    ],
+    
+    "servers": [
+        "example server id 1",
+        "exmaple server id 2"
+    ],
+
+    "channels": [
+        "example channel id 1",
+        "example channel id 2"
+    ]
+}

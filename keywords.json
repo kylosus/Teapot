@@ -1,0 +1,22 @@
+{
+    "global": [
+        "example global keyword 1",
+        "example global keyword 2",
+        "example global keyword 3"
+    ],
+
+    "server": {
+        "example server keyword 1": [
+            "example server id 1"
+        ],
+        "example server keyword 2": [
+            "example server id 1",
+            "example server id 2"
+        ],
+        "example server keyword 3": [
+            "example server id 1",
+            "example server id 2",
+            "example server id 3"
+        ]
+    }
+}
