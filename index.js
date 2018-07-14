@@ -1,10 +1,11 @@
+let fs = require('fs');
 const Discord = require('discord.js');
 const Client = new Discord.Client();
 const request = require('request-promise');
-let fs = require('fs');
 const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
 const blacklisted = JSON.parse(fs.readFileSync('./blacklisted.json', 'utf8'));
 const keywords = parseKeywords(require('./keywords.json'));
+const hasBlacklisted = setBlacklist(blacklisted);
 
 if (isCloud()) {
     config.token = process.env.DISCORD_TOKEN;
@@ -21,35 +22,43 @@ Client.on('message', message => {
         return;
     }
 
-    if (isBlacklisted(message)) {
-        return;
-    }
-
     let lowercaseContent = message.content.toLowerCase();
 
-    keywords.forEach(pair => {
-        if (lowercaseContent.includes(pair.keyword)) {
-            if (pair.servers.length == 0) {
-                logKeyword(message, pair.keyword);
+    for (let i = 0, max = keywords.length; i < max; i++) {
+        if (lowercaseContent.includes(keywords[i].keyword)) {
+            if (keywords[i].servers.length == 0) {
+                if (!isBlacklisted(message)) {
+                    logKeyword(message, keywords[i].keyword);
+                }
                 break;
             } else {
-                if (pair.servers.indexOf(message.guild.id) >= 0) {
-                    logKeyword(message, pair.keyword);
+                if (keywords[i].servers.indexOf(message.guild.id) >= 0) {
+                    if (!blacklisted(message)) {
+                        logKeyword(message, keywords[i].keyword);
+                    }
                     break;
                 }
             }
         }
-    });
+    }
 });
 
+function setBlacklist(blacklisted) {
+    return {
+        "users": blacklisted.users.length > 0,
+        "servers": blacklisted.servers.length > 0,
+        "channels": blacklisted.channels.length >0
+    }
+}
+
 function isBlacklisted(message) {
-    if (message.author.id in blacklisted.users) {
+    if (hasBlacklisted.users && blacklisted.users.indexOf(message.author.id) >= 0) {
         return true;
     }
-    if (message.guild.id in blacklisted.servers) {
+    if (hasBlacklisted.servers && blacklisted.servers.indexOf(message.guild.id) >= 0) {
         return true;
     }
-    if (message.channel.id in blacklisted.channels) {
+    if (hasBlacklisted.channels && blacklisted.channels.indexOf(message.channel.id) >= 0) {
         return true;
     }
     return false;
@@ -146,19 +155,21 @@ function isCloud() {
 
 function parseKeywords(keywords) {
     let array = [];
-    function KeywordPair(keyword, servers) {
-        this.keyword = keyword;
-        this.servers = servers
-    }
 
     keywords['global'].forEach(keyword => {
-        let temp = new KeywordPair(keyword, []);
-        array.push(temp);
+        array.push({
+            "keyword": keyword,
+            "servers": []
+        });
     });
+
     for (let keyword in keywords.server) {
-        let temp = new KeywordPair(keyword, keywords.server[keyword]);
-        array.push(temp);
+        array.push({
+            "keyword": keyword,
+            "servers": keywords.server[keyword]
+        });
     }
+
     return array;
 }
 
