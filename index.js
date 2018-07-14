@@ -33,7 +33,7 @@ Client.on('message', message => {
                 break;
             } else {
                 if (keywords[i].servers.indexOf(message.guild.id) >= 0) {
-                    if (!blacklisted(message)) {
+                    if (!isBlacklisted(message)) {
                         logKeyword(message, keywords[i].keyword);
                     }
                     break;
