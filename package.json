@@ -1,6 +1,6 @@
 {
-  "name": "Teapot",
-  "version": "1.0.0",
+  "name": "teapot",
+  "version": "1.0.4",
   "description": "Discord bot that logs keywords, and notifies you",
   "main": "index.js",
   "scripts": {
