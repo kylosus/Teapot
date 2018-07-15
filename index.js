@@ -22,6 +22,10 @@ Client.on('message', message => {
         return;
     }
 
+    if (message.mentions.users.has(config.owner)) {
+        return; 
+    }
+
     let lowercaseContent = message.content.toLowerCase();
 
     for (let i = 0, max = keywords.length; i < max; i++) {
@@ -173,7 +177,7 @@ function parseKeywords(keywords) {
     return array;
 };
 
-Client.login(config.token).then(success => {
+Client.login(config.token).then(() => {
     console.log(`Logged in as ${Client.user.tag}`);
 }, fail => {
     console.log(`Failed to log in\n${fail}`);
