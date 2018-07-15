@@ -2,9 +2,9 @@ let fs = require('fs');
 const Discord = require('discord.js');
 const Client = new Discord.Client();
 const request = require('request-promise');
-const config = JSON.parse(fs.readFileSync('./config.json', 'utf8'));
-const blacklisted = JSON.parse(fs.readFileSync('./blacklisted.json', 'utf8'));
-const keywords = parseKeywords(require('./keywords.json'));
+const config = JSON.parse(fs.readFileSync('./configuration/config.json', 'utf8'));
+const blacklisted = JSON.parse(fs.readFileSync('./configuration/blacklisted.json', 'utf8'));
+const keywords = parseKeywords(require('./configuration/keywords.json'));
 const hasBlacklisted = setBlacklist(blacklisted);
 
 if (isCloud()) {
