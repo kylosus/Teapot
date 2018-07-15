@@ -49,7 +49,7 @@ function setBlacklist(blacklisted) {
         "servers": blacklisted.servers.length > 0,
         "channels": blacklisted.channels.length >0
     }
-}
+};
 
 function isBlacklisted(message) {
     if (hasBlacklisted.users && blacklisted.users.indexOf(message.author.id) >= 0) {
@@ -62,20 +62,20 @@ function isBlacklisted(message) {
         return true;
     }
     return false;
-}
+};
 
 function logKeyword(message, keyword) {
     getHistory(message).then(messages => {
         executeRequest(message, messages, keyword);
     });
-}
+};
 
 function getHistory(message) {
    return message.channel.fetchMessages({
         limit: 4,
         before: message.id,
     });
-}
+};
 
 function executeRequest(message, messages, keyword) {
     messages = concatAttachments(messages.array());;
@@ -122,36 +122,36 @@ function executeRequest(message, messages, keyword) {
                 }],
             },
             json: true
-        }
-        request(options).catch(error => {
-            console.log('Error\n' + error.toString());
-        });
-    };
+    }
+    request(options).catch(error => {
+    console.log('Error\n' + error.toString());
+    });
+};
 
-    function concatAttachments(messages) {
-        messages.forEach(message => {
-            if (message.content === "") {
-                if (message.attachments.array().length > 0) {
-                    message.content = message.attachments.array()[0].url;
-                } else {
-                    message.content = '-';
-                }
+function concatAttachments(messages) {
+    messages.forEach(message => {
+        if (message.content === "") {
+            if (message.attachments.array().length > 0) {
+                message.content = message.attachments.array()[0].url;
             } else {
-                let attachmentArray = message.attachments.array();
-                if (attachmentArray.length > 0) {
-                    let attachmentURL = attachmentArray[0].url;
-                    if (message.content.length + '\n' + attachmentURL.length < 2048) {
-                        message.content = message.content + attachmentURL;
-                    }
+                message.content = '-';
+            }
+        } else {
+            let attachmentArray = message.attachments.array();
+            if (attachmentArray.length > 0) {
+                let attachmentURL = attachmentArray[0].url;
+                if (message.content.length + '\n' + attachmentURL.length < 2048) {
+                    message.content = message.content + attachmentURL;
                 }
             }
-        });
-        return messages;
-    }
+        }
+    });
+    return messages;
+};
 
 function isCloud() {
     return process.env.DISCORD_TOKEN != null;
-}
+};
 
 function parseKeywords(keywords) {
     let array = [];
@@ -171,7 +171,7 @@ function parseKeywords(keywords) {
     }
 
     return array;
-}
+};
 
 Client.login(config.token).then(success => {
     console.log(`Logged in as ${Client.user.tag}`);
