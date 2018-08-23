@@ -80,15 +80,17 @@ function getHistory(message) {
 
 function executeRequest(message, messages, keyword) {
     messages = concatAttachments(messages.array());
-    const fields = messages.map(message => ({
-        name: message.author.username,
-        value: message.content.substring(0, 2000),
-        inline: false
-    })).reverse().push({
+    const embedFields = messages.map(message => ({
         name: message.author.username,
         value: message.content,
         inline: false
+    })).reverse();
+    embedFields.push({
+        name: message.author.username,
+        value: message.content.substring(0, 2000),
+        inline: false
     });
+    console.log(embedFields);
     const options = {
         method: 'POST',
         uri: config.webhook,
@@ -101,7 +103,7 @@ function executeRequest(message, messages, keyword) {
                     },
                     "color": message.member.displayColor,
                     "description": `Server \`${message.guild.name}\`\nChannel: <#${message.channel.id}>`,
-                    fields: fields,
+                    fields: embedFields,
                     timestamp: message.createdAt
                 }],
             },
@@ -156,5 +158,5 @@ function parseKeywords(keywords) {
 Client.login(process.env.DISCORD_TOKEN || config.token).catch(console.error);
 Client.on('ready', () => {
     console.log(`Logged in as ${Client.user.tag}`);
-    Client.user.setPresence({ status: 'invisible' });
+    Client.user.setPresence({ status: 'idle' });
 });
