@@ -1,4 +1,4 @@
-let fs = require('fs');
+const fs = require('fs');
 const Discord = require('discord.js');
 const Client = new Discord.Client();
 const request = require('request-promise');
@@ -6,17 +6,14 @@ const config = JSON.parse(fs.readFileSync('./configuration/config.json', 'utf8')
 const blacklisted = JSON.parse(fs.readFileSync('./configuration/blacklisted.json', 'utf8'));
 const keywords = parseKeywords(require('./configuration/keywords.json'));
 const hasBlacklisted = setBlacklist(blacklisted);
-
-if (isCloud()) {
-    config.token = process.env.DISCORD_TOKEN;
-}
+config.owner = config.owner || process.env.OWNER;
+config.webhooks = config.webhooks || process.env.WEBHOOK;
 
 Client.on('message', message => {
 
     if (message.author.id === Client.user.id || message.author.id == config.owner) {
         return;
     }
-
 
     if (message.guild == null || message.author.bot) {
         return;
@@ -26,7 +23,7 @@ Client.on('message', message => {
         return; 
     }
 
-    let lowercaseContent = message.content.toLowerCase();
+    const lowercaseContent = message.content.toLowerCase();
 
     for (let i = 0, max = keywords.length; i < max; i++) {
         if (lowercaseContent.includes(keywords[i].keyword)) {
@@ -82,8 +79,17 @@ function getHistory(message) {
 };
 
 function executeRequest(message, messages, keyword) {
-    messages = concatAttachments(messages.array());;
-    let options = {
+    messages = concatAttachments(messages.array());
+    const fields = message.map(message => ({
+        name: message.author.username,
+        value: message.content.substring(0, 2000),
+        inline: false
+    })).reverse().push({
+        name: message.author.username,
+        value: message.content,
+        inline: false
+    });
+    const options = {
         method: 'POST',
         uri: config.webhook,
         body: {
@@ -95,33 +101,7 @@ function executeRequest(message, messages, keyword) {
                     },
                     "color": message.member.displayColor,
                     "description": `Server \`${message.guild.name}\`\nChannel: <#${message.channel.id}>`,
-                    fields: [
-                        {
-                            name: messages[3].author.username,
-                            value: messages[3].content,
-                            inline: false
-                        },
-                        {
-                            name: messages[2].author.username,
-                            value: messages[2].content,
-                            inline: false
-                        },
-                        {
-                            name: messages[1].author.username,
-                            value: messages[1].content,
-                            inline: false
-                        },
-                        {
-                            name: messages[0].author.username,
-                            value: messages[0].content,
-                            inline: false
-                        },
-                        {
-                            name: message.author.username,
-                            value: message.content,
-                            inline: false
-                        }
-                    ],
+                    fields: fields,
                     timestamp: message.createdAt
                 }],
             },
@@ -153,10 +133,6 @@ function concatAttachments(messages) {
     return messages;
 };
 
-function isCloud() {
-    return process.env.DISCORD_TOKEN != null;
-};
-
 function parseKeywords(keywords) {
     let array = [];
 
@@ -177,10 +153,8 @@ function parseKeywords(keywords) {
     return array;
 };
 
-Client.login(config.token).then(() => {
+Client.login(process.env.DISCORD_TOKEN || config.token).catch(console.error);
+Client.on('ready', () => {
     console.log(`Logged in as ${Client.user.tag}`);
-}, fail => {
-    console.log(`Failed to log in\n${fail}`);
-}).catch(rejection => {     
-    console.log(`Promise rejection ${rejection}`);
+    Client.user.setPresence({ status: 'invisible' });
 });
