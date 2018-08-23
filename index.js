@@ -80,7 +80,7 @@ function getHistory(message) {
 
 function executeRequest(message, messages, keyword) {
     messages = concatAttachments(messages.array());
-    const fields = message.map(message => ({
+    const fields = messages.map(message => ({
         name: message.author.username,
         value: message.content.substring(0, 2000),
         inline: false
