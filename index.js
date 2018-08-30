@@ -7,7 +7,7 @@ const blacklisted = JSON.parse(fs.readFileSync('./configuration/blacklisted.json
 const keywords = parseKeywords(require('./configuration/keywords.json'));
 const hasBlacklisted = setBlacklist(blacklisted);
 config.owner = config.owner || process.env.OWNER;
-config.webhooks = config.webhooks || process.env.WEBHOOK;
+config.webhook = config.webhook || process.env.WEBHOOK;
 
 Client.on('message', message => {
 
