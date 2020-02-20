@@ -43,19 +43,6 @@ const Client = new Discord.Client({
 });
 
 
-function isBlacklisted(message) {
-    if (hasBlacklisted.users && blacklisted.users.indexOf(message.author.id) >= 0) {
-        return true;
-    }
-    if (hasBlacklisted.servers && blacklisted.servers.indexOf(message.guild.id) >= 0) {
-        return true;
-    }
-    if (hasBlacklisted.channels && blacklisted.channels.indexOf(message.channel.id) >= 0) {
-        return true;
-    }
-    return false;
-};
-
 function logKeyword(message, keyword) {
     getHistory(message).then(messages => {
         executeRequest(message, messages, keyword);
@@ -114,6 +101,11 @@ const config = ((_config) => ({
 	presence:   _config.presence   || process.env.PRESENCE          || 'idle',
 }))(require('./configuration/config'));
 
+function isBlacklisted(user, guild, channel) {
+	return (blacklisted.users.includes(user)    ||
+		blacklisted.servers.includes(guild)     ||
+		blacklisted.channels.includes(channel));
+}
 function concatAttachments(messages) {
     messages.forEach(message => {
         if (message.content === "") {
