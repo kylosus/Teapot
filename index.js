@@ -58,7 +58,6 @@ Client.on('message', async m => {
 		return sendLog(
 			messagePrev,
 			m.author.tag,
-			m.member.displayColor || 0,
 			m.author.displayAvatarURL,
 			m.member ? m.member.displayColor : 0,
 			m.guild.name,
