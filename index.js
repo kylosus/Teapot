@@ -35,12 +35,12 @@ Client.on('message', async m => {
 
 	for (const k of keywords) {
 		if (!lowercaseContent.includes(k.keyword)) {
-			return;
+			continue;
 		}
 
 		if (k.servers.length) {
 			if (!k.servers.includes(m.guild.id)) {
-				return;
+				continue;
 			}
 		}
 
