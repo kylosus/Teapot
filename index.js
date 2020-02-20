@@ -8,55 +8,6 @@ const Client = new Discord.Client({
 	disabledEvents: require('./configuration/bot/xEvents.js')
 });
 
-
-function logKeyword(message, keyword) {
-    getHistory(message).then(messages => {
-        executeRequest(message, messages, keyword);
-    });
-};
-
-function getHistory(message) {
-   return message.channel.fetchMessages({
-        limit: 4,
-        before: message.id,
-    });
-};
-
-function executeRequest(message, messages, keyword) {
-    messages = concatAttachments(messages.array());
-    const embedFields = messages.map(message => ({
-        name: message.author.username,
-        value: message.content,
-        inline: false
-    })).reverse();
-    embedFields.push({
-        name: message.author.username,
-        value: message.content.substring(0, 2000),
-        inline: false
-    });
-    console.log(embedFields);
-    const options = {
-        method: 'POST',
-        uri: config.webhook,
-        body: {
-            content: `<@${config.owner}>`,
-            embeds: [{
-                    title: `${message.author.tag} mentioned ${keyword}`,
-                    thumbnail: {
-                       url: message.author.avatarURL,
-                    },
-                    "color": message.member.displayColor,
-                    "description": `Server \`${message.guild.name}\`\nChannel: <#${message.channel.id}>`,
-                    fields: embedFields,
-                    timestamp: message.createdAt
-                }],
-            },
-            json: true
-    }
-    request(options).catch(error => {
-    console.log('Error\n' + error.toString());
-    });
-};
 const keywords      = parseKeywords(require('./configuration/keywords'));
 const blacklisted   = require('./configuration/blacklisted');
 
@@ -122,6 +73,30 @@ function isBlacklisted(user, guild, channel) {
 		blacklisted.servers.includes(guild)     ||
 		blacklisted.channels.includes(channel));
 }
+
+function sendLog(messages, user, color, guild, channel, timestamp, keyword) {
+	const embedFields = concatAttachments(messages).map(m => ({
+		name: m.author.username,
+		value: m.content,
+		inline: false
+	}));
+
+	const options = {
+		method: 'POST',
+		uri: config.webhook,
+		body: {
+			content: `<@${config.owner}>`,
+			embeds: [{
+				title: `${user} mentioned ${keyword}`,
+				thumbnail: {
+					url: user.displayAvatarURL,
+				},
+	request(options).catch(error => {
+		console.error(`Error logging ${keyword} in ${guild}/${channel} by ${user}`
+			+ '\n' + error.toString());
+	});
+}
+
 function concatAttachments(messages) {
 	return messages.map(m => {
 		if (m.attachments.size) {
