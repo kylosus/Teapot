@@ -1,11 +1,10 @@
 const fs = require('fs');
+require('dotenv').config();
 const request = require('request-promise');
 const config = JSON.parse(fs.readFileSync('./configuration/config.json', 'utf8'));
 const blacklisted = JSON.parse(fs.readFileSync('./configuration/blacklisted.json', 'utf8'));
 const keywords = parseKeywords(require('./configuration/keywords.json'));
 const hasBlacklisted = setBlacklist(blacklisted);
-config.owner = config.owner || process.env.OWNER;
-config.webhook = config.webhook || process.env.WEBHOOK;
 
 Client.on('message', message => {
 
@@ -117,6 +116,12 @@ function executeRequest(message, messages, keyword) {
     console.log('Error\n' + error.toString());
     });
 };
+const config = ((_config) => ({
+	token:      _config.token      || process.env.DISCORD_TOKEN,
+	owner:      _config.owner      || process.env.OWNER,
+	webhook:    _config.webhook    || process.env.WEBHOOK,
+	presence:   _config.presence   || process.env.PRESENCE          || 'idle',
+}))(require('./configuration/config'));
 
 function concatAttachments(messages) {
     messages.forEach(message => {
