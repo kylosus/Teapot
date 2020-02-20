@@ -1,6 +1,4 @@
 const fs = require('fs');
-const Discord = require('discord.js');
-const Client = new Discord.Client();
 const request = require('request-promise');
 const config = JSON.parse(fs.readFileSync('./configuration/config.json', 'utf8'));
 const blacklisted = JSON.parse(fs.readFileSync('./configuration/blacklisted.json', 'utf8'));
@@ -42,6 +40,7 @@ Client.on('message', message => {
             }
         }
     }
+	disabledEvents: require('./configuration/bot/xEvents.js')
 });
 
 function setBlacklist(blacklisted) {
