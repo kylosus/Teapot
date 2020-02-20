@@ -23,7 +23,7 @@ Client.on('message', async m => {
 		return;
 	}
 
-	if (!m.guild || !m.member || m.author.bot) {
+	if (!m.guild || m.author.bot) {
 		return;
 	}
 
@@ -58,7 +58,7 @@ Client.on('message', async m => {
 		return sendLog(
 			messagePrev,
 			m.author.tag,
-			m.member.displayColor,
+			m.member.displayColor || 0,
 			m.guild.name,
 			m.channel.toString(),
 			m.createdAt,
