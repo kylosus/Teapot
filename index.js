@@ -1,6 +1,5 @@
 require('dotenv').config();
 const request = require('request-promise');
-const hasBlacklisted = setBlacklist(blacklisted);
 
 Client.on('message', message => {
 
@@ -43,13 +42,6 @@ const Client = new Discord.Client({
 	disabledEvents: require('./configuration/bot/xEvents.js')
 });
 
-function setBlacklist(blacklisted) {
-    return {
-        "users": blacklisted.users.length > 0,
-        "servers": blacklisted.servers.length > 0,
-        "channels": blacklisted.channels.length >0
-    }
-};
 
 function isBlacklisted(message) {
     if (hasBlacklisted.users && blacklisted.users.indexOf(message.author.id) >= 0) {
