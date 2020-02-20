@@ -91,6 +91,17 @@ function sendLog(messages, user, color, guild, channel, timestamp, keyword) {
 				thumbnail: {
 					url: user.displayAvatarURL,
 				},
+				description: `Server: ${guild}` + '\n' +
+					`Channel: ${channel}` + '\n' +
+					`[Jump to message](${messages[messages.length - 1].url})`
+				fields: embedFields,
+				color,
+				timestamp
+			}],
+		},
+		json: true
+	};
+
 	request(options).catch(error => {
 		console.error(`Error logging ${keyword} in ${guild}/${channel} by ${user}`
 			+ '\n' + error.toString());
