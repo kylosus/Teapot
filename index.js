@@ -1,9 +1,5 @@
-const fs = require('fs');
 require('dotenv').config();
 const request = require('request-promise');
-const config = JSON.parse(fs.readFileSync('./configuration/config.json', 'utf8'));
-const blacklisted = JSON.parse(fs.readFileSync('./configuration/blacklisted.json', 'utf8'));
-const keywords = parseKeywords(require('./configuration/keywords.json'));
 const hasBlacklisted = setBlacklist(blacklisted);
 
 Client.on('message', message => {
@@ -116,6 +112,9 @@ function executeRequest(message, messages, keyword) {
     console.log('Error\n' + error.toString());
     });
 };
+const keywords      = parseKeywords(require('./configuration/keywords'));
+const blacklisted   = require('./configuration/blacklisted');
+
 const config = ((_config) => ({
 	token:      _config.token      || process.env.DISCORD_TOKEN,
 	owner:      _config.owner      || process.env.OWNER,
