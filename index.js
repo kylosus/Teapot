@@ -138,7 +138,7 @@ function parseKeywords(keywords) {
 	for (const k in keywords.server) {
 		_arr.push({
 			keyword: k,
-			servers: keywords.server[keyword]
+			servers: keywords.server[k]
 		});
 	}
 
