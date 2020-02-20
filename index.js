@@ -59,6 +59,8 @@ Client.on('message', async m => {
 			messagePrev,
 			m.author.tag,
 			m.member.displayColor || 0,
+			m.author.displayAvatarURL,
+			m.member ? m.member.displayColor : 0,
 			m.guild.name,
 			m.channel.toString(),
 			m.createdAt,
@@ -73,7 +75,7 @@ function isBlacklisted(user, guild, channel) {
 		blacklisted.channels.includes(channel));
 }
 
-function sendLog(messages, user, color, guild, channel, timestamp, keyword) {
+function sendLog(messages, user, thumbnail, color, guild, channel, timestamp, keyword) {
 	const embedFields = concatAttachments(messages).map(m => ({
 		name: m.author.username,
 		value: m.content,
@@ -88,7 +90,7 @@ function sendLog(messages, user, color, guild, channel, timestamp, keyword) {
 			embeds: [{
 				title: `${user} mentioned ${keyword}`,
 				thumbnail: {
-					url: user.displayAvatarURL,
+					url: thumbnail,
 				},
 				description: `Server: ${guild}` + '\n' +
 					`Channel: ${channel}` + '\n' +
