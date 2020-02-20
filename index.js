@@ -135,26 +135,27 @@ function concatAttachments(messages) {
 };
 
 function parseKeywords(keywords) {
-    let array = [];
+	const _arr = [];
 
-    keywords['global'].forEach(keyword => {
-        array.push({
-            "keyword": keyword,
-            "servers": []
-        });
-    });
+	keywords['global'].forEach(k => {
+		_arr.push({
+			keyword: k,
+			servers: []
+		});
+	});
 
-    for (let keyword in keywords.server) {
-        array.push({
-            "keyword": keyword,
-            "servers": keywords.server[keyword]
-        });
-    }
+	for (const k in keywords.server) {
+		_arr.push({
+			keyword: k,
+			servers: keywords.server[keyword]
+		});
+	}
 
-    return array;
-};
+	return _arr;
+}
 
-Client.login(process.env.DISCORD_TOKEN || config.token).catch(console.error);
+Client.login(config.token).catch(console.error);
+
 Client.on('ready', () => {
     console.log(`Logged in as ${Client.user.tag}`);
     Client.user.setPresence({ status: 'idle' });
