@@ -4,7 +4,6 @@ const request = require('request-promise');
 const Discord = require('discord.js');
 const Client = new Discord.Client({
 	messageCacheMaxSize: 1,
-	sync: true,
 	disabledEvents: require('./configuration/bot/xEvents.js')
 });
 
