@@ -14,8 +14,9 @@
   "author": "jokersus#3343",
   "license": "ISC",
   "dependencies": {
-    "discord.js": "^11.3.2",
-    "request": "^2.87.0",
-    "request-promise": "^4.2.2"
+    "discord.js": "^11.5.1",
+    "dotenv": "^8.2.0",
+    "request": "^2.88.2",
+    "request-promise": "^4.2.5"
   }
 }
