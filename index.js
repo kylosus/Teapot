@@ -1,40 +1,6 @@
 require('dotenv').config();
 const request = require('request-promise');
 
-Client.on('message', message => {
-
-    if (message.author.id === Client.user.id || message.author.id == config.owner) {
-        return;
-    }
-
-    if (message.guild == null || message.author.bot) {
-        return;
-    }
-
-    if (message.mentions.users.has(config.owner)) {
-        return; 
-    }
-
-    const lowercaseContent = message.content.toLowerCase();
-
-    for (let i = 0, max = keywords.length; i < max; i++) {
-        if (lowercaseContent.includes(keywords[i].keyword)) {
-            if (keywords[i].servers.length == 0) {
-                if (!isBlacklisted(message)) {
-                    logKeyword(message, keywords[i].keyword);
-                }
-                break;
-            } else {
-                if (keywords[i].servers.indexOf(message.guild.id) >= 0) {
-                    if (!isBlacklisted(message)) {
-                        logKeyword(message, keywords[i].keyword);
-                    }
-                    break;
-                }
-            }
-        }
-    }
-
 const Discord = require('discord.js');
 const Client = new Discord.Client({
 	messageCacheMaxSize: 1,
@@ -100,6 +66,56 @@ const config = ((_config) => ({
 	webhook:    _config.webhook    || process.env.WEBHOOK,
 	presence:   _config.presence   || process.env.PRESENCE          || 'idle',
 }))(require('./configuration/config'));
+
+Client.on('message', async m => {
+
+	if (m.author.id === Client.user.id || m.author.id === config.owner) {
+		return;
+	}
+
+	if (m.guild == null || m.author.bot) {
+		return;
+	}
+
+	if (m.mentions.users.has(config.owner)) {
+		return;
+	}
+
+	const lowercaseContent = m.content.toLowerCase();
+
+	for (const k of keywords) {
+		if (!lowercaseContent.includes(k.keyword)) {
+			return;
+		}
+
+		if (k.servers.length) {
+			if (!k.servers.includes(m.guild.id)) {
+				return;
+			}
+		}
+
+		if (isBlacklisted(m.author.id, m.guild.id, m.channel.id)) {
+			return;
+		}
+
+		const messagePrev = (await m.channel.fetchMessages({
+			limit: 4,
+			before: m.id,
+		})).array();
+
+		messagePrev.reverse().push(m);
+
+		return sendLog(
+			messagePrev,
+			m.author.tag,
+			m.member.displayColor,
+			m.guild.name,
+			m.channel.toString(),
+			m.createdAt,
+			k.keyword
+		);
+	}
+});
 
 function isBlacklisted(user, guild, channel) {
 	return (blacklisted.users.includes(user)    ||
