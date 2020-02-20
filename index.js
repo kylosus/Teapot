@@ -157,6 +157,6 @@ function parseKeywords(keywords) {
 Client.login(config.token).catch(console.error);
 
 Client.on('ready', () => {
-    console.log(`Logged in as ${Client.user.tag}`);
-    Client.user.setPresence({ status: 'idle' });
+	console.log(`Logged in as ${Client.user.tag}`);
+	Client.user.setPresence({ status: config.presence });
 });
