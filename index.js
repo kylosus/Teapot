@@ -93,7 +93,7 @@ function sendLog(messages, user, color, guild, channel, timestamp, keyword) {
 				},
 				description: `Server: ${guild}` + '\n' +
 					`Channel: ${channel}` + '\n' +
-					`[Jump to message](${messages[messages.length - 1].url})`
+					`[Jump to message](${messages[messages.length - 1].url})`,
 				fields: embedFields,
 				color,
 				timestamp
