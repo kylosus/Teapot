@@ -123,25 +123,21 @@ function isBlacklisted(user, guild, channel) {
 		blacklisted.channels.includes(channel));
 }
 function concatAttachments(messages) {
-    messages.forEach(message => {
-        if (message.content === "") {
-            if (message.attachments.array().length > 0) {
-                message.content = message.attachments.array()[0].url;
-            } else {
-                message.content = '-';
-            }
-        } else {
-            let attachmentArray = message.attachments.array();
-            if (attachmentArray.length > 0) {
-                let attachmentURL = attachmentArray[0].url;
-                if (message.content.length + '\n' + attachmentURL.length < 2048) {
-                    message.content = message.content + attachmentURL;
-                }
-            }
-        }
-    });
-    return messages;
-};
+	return messages.map(m => {
+		if (m.attachments.size) {
+			m.content = m.content.concat(m.attachments.map(a => a.url).join('\n'));
+		}
+
+		// m.content = m.content.length >= 2048 ? m.content.slice(0, 2048 - 3).concat('...') : m.content || '-';
+		m.content = m.content || '-';
+
+		if (m.content.length >= 2048) {
+			m.content = m.content.slice(0, 2048 - 3) + '...';
+		}
+
+		return m;
+	});
+}
 
 function parseKeywords(keywords) {
 	const _arr = [];
