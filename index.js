@@ -24,7 +24,7 @@ Client.on('message', async m => {
 		return;
 	}
 
-	if (m.guild == null || m.author.bot) {
+	if (!m.guild || !m.author || m.author.bot) {
 		return;
 	}
 
