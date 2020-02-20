@@ -1,5 +1,4 @@
 module.exports = [
-	'GUILD_SYNC',
 	'GUILD_INTEGRATIONS_UPDATE',
 	'GUILD_BAN_ADD',
 	'GUILD_BAN_REMOVE',
